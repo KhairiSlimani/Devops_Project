@@ -92,7 +92,7 @@ pipeline {
 
         stage('CREATE DOCKER IMAGE BACK') {
             steps {
-                dir('DevOpsBackend') {
+                dir('DevOps_Project') {
                     script {
                         sh 'docker build -t khairislimani/devopsbackend .'
                         sh 'docker push khairislimani/devopsbackend'
