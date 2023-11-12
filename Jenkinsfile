@@ -8,9 +8,9 @@ pipeline {
             }
         }
      
-        stage(' UNIT TESTES AND NOTIF') {
+        stage(' UNIT TESTES AND SEND MAIL') {
             steps {
-                dir('DevOpsBackend') {
+                dir('DevOps_Project') {
                     script {
                         try {
                             sh 'mvn clean install'
@@ -26,7 +26,7 @@ pipeline {
                     script {
                         def subject = "TESTES"
                         def body = "SUCCESS"
-                        def to = 'khairi@gmail.com'
+                        def to = 'khairi.slimani@esprit.com'
 
                         mail(
                             subject: subject,
@@ -39,7 +39,7 @@ pipeline {
                     script {
                         def subject = "Build Failure - ${currentBuild.fullDisplayName}"
                         def body = "The build has failed "
-                        def to = 'khairi@gmail.com'
+                        def to = 'khairi.slimani@esprit.com'
 
                         mail(
                             subject: subject,
@@ -53,14 +53,77 @@ pipeline {
         }
         stage('SONARQUBE') {
             steps {
-                dir('DevOpsBackend') {
+                dir('DevOps_Project') {
                 sh 'mvn sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=admin -Dsonar.password=khairi'
             }
             }
         }
+
+        stage('NEXUS') {
+            steps {
+                dir('DevOps_Project') {
+                sh 'mvn clean deploy -DskipTests'
+            }
+            }
+        }
         
-       
+            stage('BBUILD FRONT') {
+                steps {
+                    dir('DevOps_Project_Front') {
+                        script {
+                            
+                            sh 'npm install -g npm@latest'
+                            sh 'npm install --force'
+                            sh 'npm run build'      
+                        }
+                    }
+                }
+            }
+
+      stage('LOGIN DOCKER') {
+        steps {
+        script {
+            withCredentials([string(credentialsId: 'password', variable: 'dockerhubpwd')]) {
+            sh 'docker login -u khairislimani -p ${dockerhubpwd}'
+                }
+            }
+        }    
+      }
+
+        stage('CREATE DOCKER IMAGE BACK') {
+            steps {
+                dir('DevOpsBackend') {
+                    script {
+                        sh 'docker build -t khairislimani/devopsbackend .'
+                        sh 'docker push khairislimani/devopsbackend'
+                    }
+                }
+            }
+        }
+        stage('CREATE DOCKER IMAGE FRONT') {
+            steps {
+                dir('DevOps_Project_Front') {
+                    script {
+                        sh 'docker build -t khairislimani/devopsfrontend .'
+                        sh 'docker push khairislimani/devopsfrontend'
+                        
+                    }
+                }
+            }
+        }
+        
+       stage('DEPLOY APP') {
+            steps {
+                
+                script {
+                    sh 'docker-compose -f docker-compose.yml up -d' 
+                    sh 'docker-compose -f docker-compose.yml start'                       
+                }
+                
+            }
+        }
     }
+        
 }
 
 
