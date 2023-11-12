@@ -18,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -36,9 +37,9 @@ public class Invoice implements Serializable {
 	Boolean archived;
 	@OneToMany(mappedBy = "invoice")
 	Set<InvoiceDetail> invoiceDetails;
-    @ManyToOne
-    @JsonIgnore
-    Supplier supplier;
+	@ManyToOne
+	@JsonIgnore
+	Supplier supplier;
 
-	
+
 }
