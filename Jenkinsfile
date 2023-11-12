@@ -70,28 +70,28 @@ pipeline {
             }
         }
         
-            stage('BBUILD FRONT') {
-                steps {
-                    dir('DevOps_Project_Front') {
-                        script {
-                            
-                            sh 'npm install -g npm@latest'
-                            sh 'npm install --force'
-                            sh 'npm run build'      
-                        }
+        stage('BBUILD FRONT') {
+            steps {
+                dir('DevOps_Project_Front') {
+                    script {
+                        
+                        sh 'npm install -g npm@latest'
+                        sh 'npm install --force'
+                        sh 'npm run build'      
                     }
                 }
             }
+        }
 
-      stage('LOGIN DOCKER') {
-        steps {
-        script {
-       withCredentials([string(credentialsId: 'password', variable: 'dockerhubpwd')]) {
-                sh 'sudo docker login -u khairi.slimani@esprit.tn -p ${dockerhubpwd}'
-                }
+        stage('LOGIN DOCKER') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
+                        sh 'sudo docker login -u khairi.slimani@esprit.tn -p ${dockerhubpwd}'
+                    }
+                }    
             }
-        }    
-      }
+        }
 
         stage('CREATE DOCKER IMAGE BACK') {
             steps {
