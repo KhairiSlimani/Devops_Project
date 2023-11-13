@@ -41,7 +41,7 @@ class StockServiceImplTest {
         stock.setTitle("Title");
         this.stockService.addStock(stock);
         assertEquals(this.stockService.retrieveAllStock().size(),2);
-        assertEquals(this.stockService.retrieveStock(2L).getTitle(),"Title");
+        assertEquals(this.stockService.retrieveStock(3L).getTitle(),"Title");
     }
 
     @Test
