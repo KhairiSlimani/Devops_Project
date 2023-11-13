@@ -24,7 +24,7 @@ pipeline {
                     }
                 }
             }
-          /* post {
+            post {
                 success {
                     script {
                         def subject = "TESTES"
@@ -52,7 +52,7 @@ pipeline {
                     }
                 }
                 
-            }*/
+            }
         }
         stage('SONARQUBE') {
             steps {
