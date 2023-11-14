@@ -97,8 +97,8 @@ pipeline {
             steps {
                 dir('DevOps_Project') {
                     script {
-                        sh 'docker build -t khairislimani/devopsbackend .'
-                        sh 'docker push khairislimani/devopsbackend'
+                        sh 'docker build -t khairislimani/devopsbackendimage .'
+                        sh 'docker push khairislimani/devopsbackendimage'
                     }
                 }
             }
