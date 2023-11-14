@@ -27,7 +27,7 @@ pipeline {
             post {
                 success {
                     script {
-                        def subject = "TESTES"
+                        def subject = "TEST"
                         def body = "SUCCESS"
                         def to = 'khairi.slimani@esprit.tn'
 
@@ -70,7 +70,7 @@ pipeline {
             }
         }
         
-        stage('BBUILD FRONT') {
+        stage('BUILD FRONT') {
             steps {
                 dir('DevOps_Project_Front') {
                     script {
@@ -97,8 +97,8 @@ pipeline {
             steps {
                 dir('DevOps_Project') {
                     script {
-                        sh 'docker build -t khairislimani/devopsbackendimage .'
-                        sh 'docker push khairislimani/devopsbackendimage'
+                        sh 'docker build -t khairislimani/devopsbackend .'
+                        sh 'docker push khairislimani/devopsbackend'
                     }
                 }
             }
@@ -107,9 +107,8 @@ pipeline {
             steps {
                 dir('DevOps_Project_Front') {
                     script {
-                        sh 'docker build -t khairislimani/devopsfrontendimage .'
-                        sh 'docker push khairislimani/devopsfrontendimage'
-                        
+                        sh 'docker build -t khairislimani/devopsfrontend .'
+                        sh 'docker push khairislimani/devopsfrontend'
                     }
                 }
             }
