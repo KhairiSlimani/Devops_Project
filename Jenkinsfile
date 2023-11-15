@@ -87,8 +87,8 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
-                        sh 'docker login -u khairislimani -p ${dockerhubpwd}'
+                    withCredentials([string(credentialsId: 'dockerhubpass', variable: 'password')]) {
+                        sh 'docker login -u khairislimani -p ${password}'
                     }
                 }    
             }
