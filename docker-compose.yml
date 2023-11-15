@@ -2,40 +2,40 @@ version: '3'
 services:
   mysql:
     image: mysql:latest
-    container_name: mysqldb
+    container_name: mysql
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: devops
+      MYSQL_DATABASE: mysqldb
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - /DB:/docker-entrypoint-initdb.d/data.sql
     networks:
       - internalnet
 
-  backend:
+  spring:
     image: khairislimani/devopsbackend
-    container_name: devopsbackend
+    container_name: spring
     ports:
       - "8082:8082"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/devops?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mysqldb?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     depends_on:
       - mysql
-    networks:
-      - internalnet
     volumes: 
       - /DB:/app/data
+    networks:
+      - internalnet
 
   frontend:
     image: khairislimani/devopsfrontend
-    container_name: devopsfrontend
+    container_name: frontend
     ports:
       - "4200:4200"
     depends_on:
-      - backend
+      - spring
     networks:
       - internalnet
     
