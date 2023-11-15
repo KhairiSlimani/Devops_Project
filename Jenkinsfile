@@ -11,7 +11,7 @@ pipeline {
             }
         }
      
-        stage(' UNIT TESTES AND SEND MAIL') {
+        stage('Unit Tests and Send Mail') {
             steps {
                 dir('DevOps_Project') {
                     script {
@@ -27,10 +27,10 @@ pipeline {
             post {
                 success {
                     script {
-                        def subject = "TEST"
-                        def body = "SUCCESS"
+                        def subject = "Test Sending Email"
+                        def body = "Success"
                         def to = 'khairi.slimani@esprit.tn'
-
+                        def from = 'ks7.apps@gmail.com'
                         mail(
                             subject: subject,
                             body: body,
@@ -43,7 +43,7 @@ pipeline {
                         def subject = "Build Failure - ${currentBuild.fullDisplayName}"
                         def body = "The build has failed "
                         def to = 'khairi.slimani@esprit.tn'
-
+                        def from = 'ks7.apps@gmail.com'
                         mail(
                             subject: subject,
                             body: body,
@@ -54,23 +54,24 @@ pipeline {
                 
             }
         }
-        stage('SONARQUBE') {
+
+        stage('Sonarqube') {
             steps {
                 dir('DevOps_Project') {
-                sh 'mvn sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=admin -Dsonar.password=khairi'
-            }
+                    sh 'mvn sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=admin -Dsonar.password=khairi'
+                }
             }
         }
 
-        stage('NEXUS') {
+        stage('Nexus') {
             steps {
                 dir('DevOps_Project') {
-                sh 'mvn clean deploy -DskipTests'
-            }
+                    sh 'mvn clean deploy -DskipTests'
+                }
             }
         }
         
-        stage('BUILD FRONT') {
+        stage('Build Frontend') {
             steps {
                 dir('DevOps_Project_Front') {
                     script {
@@ -83,7 +84,7 @@ pipeline {
             }
         }
 
-        stage('LOGIN DOCKER') {
+        stage('Login to Docker Hub') {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
@@ -93,7 +94,7 @@ pipeline {
             }
         }
 
-        stage('CREATE DOCKER IMAGE BACK') {
+        stage('Build and Push Docker Image of Backend') {
             steps {
                 dir('DevOps_Project') {
                     script {
@@ -103,7 +104,8 @@ pipeline {
                 }
             }
         }
-        stage('CREATE DOCKER IMAGE FRONT') {
+
+        stage('Build and Push Docker Image of Frontend') {
             steps {
                 dir('DevOps_Project_Front') {
                     script {
@@ -114,7 +116,7 @@ pipeline {
             }
         }
         
-       stage('DEPLOY APP') {
+       stage('Deploy App') {
             steps {
                 
                 script {

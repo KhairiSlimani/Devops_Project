@@ -4,7 +4,7 @@ services:
     image: mysql:latest
     container_name: mysqldb
     ports:
-      - "3306:3306"  # Map host port 3306 to container port 3306
+      - "3306:3306"
     environment:
       MYSQL_DATABASE: devops
       MYSQL_ROOT_PASSWORD: root
@@ -13,9 +13,9 @@ services:
     networks:
       - internalnet
 
-  spring:
+  backend:
     image: khairislimani/devopsbackend
-    container_name: test_backend
+    container_name: devopsbackend
     ports:
       - "8082:8082"
     environment:
@@ -31,13 +31,14 @@ services:
 
   frontend:
     image: khairislimani/devopsfrontend
+    container_name: devopsfrontend
+    ports:
+      - "4200:4200"
     depends_on:
-      - spring
+      - backend
     networks:
       - internalnet
-    ports:
-      - "4200:4200"  # Map port 80 on the host to port 80 on the container test 
-
+    
 networks:
   internalnet:
     driver: bridge
