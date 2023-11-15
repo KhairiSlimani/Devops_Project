@@ -1,7 +1,8 @@
 pipeline {
     agent any
+
     tools{
-        nodejs 'DevOpsfrontend'
+        nodejs 'node'
     }
 
     stages {
